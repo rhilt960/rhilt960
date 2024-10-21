@@ -1,11 +1,30 @@
-function filterData() {
+function filterData(event) {
   event.preventDefault();
-  var startdate = document.getElementById("startdate").value;
-  var enddate = document.getElementById("enddate").value;
+  
+  const startdate = new Date(document.getElementById("startdate").value);
+  const enddate = new Date(document.getElementById("enddate").value);
   console.log("Starting date: " + startdate);
   console.log("Ending date: " + enddate);
-  fetch("https://compute.samford.edu/zohauth/clients/data");
+
+  const table = document.getElementById('pitchTable');
+  const rows = table.getElementsByTagName('tr');
+
+  // Loop through the rows, starting from the second row (index 1)
+  for (let i = 1; i < rows.length; i++) {
+      const cells = rows[i].getElementsByTagName('td');
+      if (cells.length > 0) {
+          const datetime = new Date(cells[3].textContent); // Assuming the datetime is in the 4th column
+
+          // Check if the datetime is within the specified range
+          if (datetime >= startdate && datetime <= enddate) {
+              rows[i].style.display = ""; // Show the row
+          } else {
+              rows[i].style.display = "none"; // Hide the row
+          }
+      }
+  }
 }
+
 
 async function fetchData() {
   try {
